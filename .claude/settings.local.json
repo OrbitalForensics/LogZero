@@ -1,0 +1,35 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(dir)",
+      "Bash(wc:*)",
+      "Bash(go mod graph:*)",
+      "Bash(go version:*)",
+      "Bash(set GO111MODULE=on)",
+      "Bash(go mod verify:*)",
+      "Bash(go build:*)",
+      "Bash(go mod tidy:*)",
+      "Bash(cmd /C \"set GO111MODULE=on && go mod tidy\")",
+      "Bash(cmd /C \"set GO111MODULE=on && set CGO_ENABLED=1 && go build -v -o logzero.exe .\")",
+      "Bash(dir:*)",
+      "Bash(cmd /C \"set GO111MODULE=on && go vet ./...\")",
+      "Bash(cmd /C \"set GO111MODULE=on && go test ./... -v\")",
+      "Bash(where:*)",
+      "Bash(go install:*)",
+      "Bash(\"%GOPATH%\\\\bin\\\\wails\" doctor)",
+      "Bash(\"%USERPROFILE%\\\\go\\\\bin\\\\wails\" doctor)",
+      "Bash(cmd /C:*)",
+      "Bash(npm install)",
+      "Bash(npm run build:*)",
+      "Bash(\"C:\\\\Users\\\\joshu\\\\go\\\\bin\\\\wails\" build -clean)",
+      "Bash(echo:*)",
+      "Bash(powershell -Command \"cd 'C:\\\\Users\\\\joshu\\\\Documents\\\\DFIRSuite\\\\LogZero'; $env:GO111MODULE='on'; & 'C:\\\\Users\\\\joshu\\\\go\\\\bin\\\\wails.exe' build -clean 2>&1\":*)",
+      "Bash(go env:*)",
+      "Bash(GO111MODULE=on ./bin/wails.exe build:*)",
+      "Bash(export GO111MODULE=on)",
+      "Bash(./bin/wails.exe build:*)",
+      "Bash(export GOFLAGS=\"-mod=mod\")",
+      "Bash(export GOPATH=\"/c/Users/joshu/go\")"
+    ]
+  }
+}
