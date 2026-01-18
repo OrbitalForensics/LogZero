@@ -1,0 +1,4 @@
+timestamp,source,event_type,event_id,user,host,message,path,tags,score,summary
+2024-04-21T03:21:00Z,sample.json,Logon,4624,jdoe,WIN-MACHINE,Successful login,test_data\sample.json,,0.00,
+2024-04-21T03:22:15Z,sample.json,ServiceStart,7036,SYSTEM,WIN-MACHINE,Windows Update service started,test_data\sample.json,,0.00,
+2024-04-21T03:25:30Z,sample.json,Error,1000,jdoe,WIN-MACHINE,Application crash detected,test_data\sample.json,,0.00,

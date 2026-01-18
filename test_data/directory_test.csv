@@ -1,0 +1,11 @@
+timestamp,source,event_type,event_id,user,host,message,path,tags,score,summary
+2024-04-21T03:21:00Z,sample.log,LogEntry,1,,,[INFO] System startup initiated,test_data\sample.log,,0.00,
+2024-04-21T03:21:15Z,sample.log,LogEntry,2,,,[INFO] Loading configuration files,test_data\sample.log,,0.00,
+2024-04-21T03:21:30Z,sample.log,LogEntry,3,,,"[WARN] Configuration file missing, using defaults",test_data\sample.log,,0.00,
+2024-04-21T03:22:00Z,sample.log,LogEntry,4,,,[INFO] Service started successfully,test_data\sample.log,,0.00,
+2024-04-21T03:25:45Z,sample.log,LogEntry,5,,,[ERROR] Failed to connect to database,test_data\sample.log,,0.00,
+2024-04-21T03:26:00Z,sample.log,LogEntry,6,,,[INFO] Retrying connection...,test_data\sample.log,,0.00,
+2024-04-21T03:26:15Z,sample.log,LogEntry,7,,,[INFO] Connection established,test_data\sample.log,,0.00,
+2024-04-21T03:21:00Z,sample.json,Logon,4624,jdoe,WIN-MACHINE,Successful login,test_data\sample.json,,0.00,
+2024-04-21T03:22:15Z,sample.json,ServiceStart,7036,SYSTEM,WIN-MACHINE,Windows Update service started,test_data\sample.json,,0.00,
+2024-04-21T03:25:30Z,sample.json,Error,1000,jdoe,WIN-MACHINE,Application crash detected,test_data\sample.json,,0.00,

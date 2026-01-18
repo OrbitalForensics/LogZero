@@ -1,0 +1,58 @@
+# Build outputs
+build/bin/
+*.exe
+*.dll
+*.so
+*.dylib
+
+# Test outputs
+test_output/
+test_output_stress/
+test_logs_stress/
+test_logs/
+*.jsonl
+*.db
+timeline.*
+
+# Go module cache (should NOT be in project)
+pkg/
+
+# Go
+*.test
+*.out
+coverage.txt
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+nul
+
+# Node/Frontend
+node_modules/
+frontend/node_modules/
+frontend/dist/
+
+# Logs
+*.log
+logs/
+
+# Temporary files
+*.tmp
+*.temp
+.tmp/
+
+# Backup files
+*.bak
+
+# Generated test data
+generate_test_logs.py
+
+# Connection files
+logzero_connection.json
