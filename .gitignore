@@ -10,6 +10,7 @@ test_output/
 test_output_stress/
 test_logs_stress/
 test_logs/
+test_data/
 *.jsonl
 *.db
 timeline.*
@@ -28,6 +29,12 @@ coverage.txt
 *.swp
 *.swo
 *~
+
+# Local build directory
+bin/
+
+# Claude Code local settings
+.claude/settings.local.json
 
 # OS
 .DS_Store
