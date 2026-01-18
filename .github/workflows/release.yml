@@ -39,6 +39,12 @@ jobs:
           wails build -nsis -platform windows/amd64
         shell: bash
 
+      - name: List build output
+        run: |
+          echo "Contents of build/bin:"
+          Get-ChildItem -Path build/bin -Recurse | ForEach-Object { $_.FullName }
+        shell: pwsh
+
       - name: Rename installer
         run: |
           $version = "${{ github.ref_name }}"
@@ -46,15 +52,26 @@ jobs:
             $version = "${{ inputs.version }}"
           }
           $version = $version -replace '^v', ''
-          Move-Item "build/bin/LogZero-amd64-installer.exe" "build/bin/LogZero-${version}-windows-x64-setup.exe" -ErrorAction SilentlyContinue
-          Move-Item "build/bin/logzero-amd64-installer.exe" "build/bin/LogZero-${version}-windows-x64-setup.exe" -ErrorAction SilentlyContinue
+
+          # Find any installer exe and rename it
+          $installers = Get-ChildItem -Path build/bin -Filter "*installer*.exe" -ErrorAction SilentlyContinue
+          if ($installers) {
+            $installer = $installers[0]
+            $newName = "LogZero-${version}-windows-x64-setup.exe"
+            Move-Item $installer.FullName "build/bin/$newName"
+            Write-Host "Renamed $($installer.Name) to $newName"
+          } else {
+            Write-Host "No installer found, listing all exe files:"
+            Get-ChildItem -Path build/bin -Filter "*.exe" | ForEach-Object { Write-Host $_.Name }
+          }
         shell: pwsh
 
       - name: Upload Windows Installer
         uses: actions/upload-artifact@v4
         with:
           name: windows-installer
-          path: build/bin/*-setup.exe
+          path: build/bin/*.exe
+          if-no-files-found: warn
 
   build-macos:
     runs-on: macos-latest
@@ -134,7 +151,7 @@ jobs:
       - name: Install Linux Dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y libgtk-3-dev libwebkit2gtk-4.0-dev nsis
+          sudo apt-get install -y libgtk-3-dev libwebkit2gtk-4.1-dev nsis
 
       - name: Install Wails
         run: go install github.com/wailsapp/wails/v2/cmd/wails@latest
