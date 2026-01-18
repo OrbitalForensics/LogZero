@@ -1,22 +1,22 @@
 {
-  "$schema": "https://wails.io/schemas/config.v2.json",
-  "name": "LogZero",
-  "outputfilename": "logzero",
-  "frontend:install": "npm install",
-  "frontend:build": "npm run build",
-  "frontend:dev:watcher": "npm run dev",
-  "frontend:dev:serverUrl": "auto",
-  "author": {
-    "name": "Orbital Forensics",
-    "email": "support@orbitalforensics.com"
-  },
-  "info": {
-    "companyName": "Orbital Forensics",
-    "productName": "LogZero",
-    "productVersion": "1.0.0",
-    "copyright": "Copyright (c) 2025 Orbital Forensics. All rights reserved.",
-    "comments": "High-performance timeline generator for Digital Forensics and Incident Response"
-  },
-  "nsisType": "multiple",
-  "obfuscated": false
+    "$schema":  "https://wails.io/schemas/config.v2.json",
+    "name":  "LogZero",
+    "outputfilename":  "logzero",
+    "frontend:install":  "npm install",
+    "frontend:build":  "npm run build",
+    "frontend:dev:watcher":  "npm run dev",
+    "frontend:dev:serverUrl":  "auto",
+    "author":  {
+                   "name":  "Orbital Forensics",
+                   "email":  "support@orbitalforensics.com"
+               },
+    "info":  {
+                 "companyName":  "Orbital Forensics",
+                 "productName":  "LogZero",
+                 "productVersion":  "1.0.0",
+                 "copyright":  "Copyright (c) 2025 Orbital Forensics. All rights reserved.",
+                 "comments":  "High-performance timeline generator for Digital Forensics and Incident Response"
+             },
+    "nsisType":  "multiple",
+    "obfuscated":  false
 }
