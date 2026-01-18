@@ -30,9 +30,16 @@ LogZero is a high-performance, modular timeline generator for processing logs an
 
 ### Download & Run
 
-1. Download the latest release for your platform
-2. Run `logzero.exe` (Windows) or `logzero` (macOS/Linux)
+1. Download the latest release for your platform from [GitHub Releases](https://github.com/OrbitalForensics/LogZero/releases)
+2. Run the installer (Windows) or extract and run (macOS/Linux)
 3. Use the GUI to select input files/folders and generate timelines
+
+| Platform | Download |
+|----------|----------|
+| Windows | `LogZero-x.x.x-windows-x64-setup.exe` |
+| macOS (Intel) | `LogZero-x.x.x-macos-x64.dmg` |
+| macOS (Apple Silicon) | `LogZero-x.x.x-macos-arm64.dmg` |
+| Linux | `LogZero-x.x.x-linux-x64.tar.gz` |
 
 **That's it!** No command-line flags required for basic usage.
 
@@ -70,7 +77,7 @@ LogZero is a high-performance, modular timeline generator for processing logs an
 
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/LogZero.git
+git clone https://github.com/OrbitalForensics/LogZero.git
 cd LogZero
 
 # Install Wails CLI (if not already installed)
