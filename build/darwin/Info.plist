@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>CFBundlePackageType</key>
+    <string>APPL</string>
+    <key>CFBundleName</key>
+    <string>LogZero</string>
+    <key>CFBundleExecutable</key>
+    <string>{{.Name}}</string>
+    <key>CFBundleIdentifier</key>
+    <string>com.orbitalforensics.logzero</string>
+    <key>CFBundleVersion</key>
+    <string>{{.Info.ProductVersion}}</string>
+    <key>CFBundleGetInfoString</key>
+    <string>High-performance timeline generator for Digital Forensics and Incident Response</string>
+    <key>CFBundleShortVersionString</key>
+    <string>{{.Info.ProductVersion}}</string>
+    <key>CFBundleIconFile</key>
+    <string>iconfile</string>
+    <key>LSMinimumSystemVersion</key>
+    <string>10.15.0</string>
+    <key>NSHighResolutionCapable</key>
+    <true/>
+    <key>NSHumanReadableCopyright</key>
+    <string>Copyright (c) 2025 Orbital Forensics. All rights reserved.</string>
+    <key>LSApplicationCategoryType</key>
+    <string>public.app-category.developer-tools</string>
+    <key>NSSupportsAutomaticGraphicsSwitching</key>
+    <true/>
+</dict>
+</plist>

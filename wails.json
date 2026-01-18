@@ -7,7 +7,16 @@
   "frontend:dev:watcher": "npm run dev",
   "frontend:dev:serverUrl": "auto",
   "author": {
-    "name": "LogZero Team",
-    "email": "contact@logzero.dev"
-  }
+    "name": "Orbital Forensics",
+    "email": "support@orbitalforensics.com"
+  },
+  "info": {
+    "companyName": "Orbital Forensics",
+    "productName": "LogZero",
+    "productVersion": "1.0.0",
+    "copyright": "Copyright (c) 2025 Orbital Forensics. All rights reserved.",
+    "comments": "High-performance timeline generator for Digital Forensics and Incident Response"
+  },
+  "nsisType": "multiple",
+  "obfuscated": false
 }

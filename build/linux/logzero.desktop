@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=LogZero
+Comment=High-performance timeline generator for Digital Forensics and Incident Response
+Exec=logzero
+Icon=logzero
+Terminal=false
+Type=Application
+Categories=Development;Utility;Security;
+Keywords=forensics;dfir;timeline;log;analysis;
+StartupNotify=true

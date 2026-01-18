@@ -1,0 +1,246 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version to release (e.g., v1.0.0)'
+        required: true
+        type: string
+
+permissions:
+  contents: write
+
+jobs:
+  build-windows:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.21'
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install Wails
+        run: go install github.com/wailsapp/wails/v2/cmd/wails@latest
+
+      - name: Build Windows Installer
+        run: |
+          wails build -nsis -platform windows/amd64
+        shell: bash
+
+      - name: Rename installer
+        run: |
+          $version = "${{ github.ref_name }}"
+          if ("${{ github.event_name }}" -eq "workflow_dispatch") {
+            $version = "${{ inputs.version }}"
+          }
+          $version = $version -replace '^v', ''
+          Move-Item "build/bin/LogZero-amd64-installer.exe" "build/bin/LogZero-${version}-windows-x64-setup.exe" -ErrorAction SilentlyContinue
+          Move-Item "build/bin/logzero-amd64-installer.exe" "build/bin/LogZero-${version}-windows-x64-setup.exe" -ErrorAction SilentlyContinue
+        shell: pwsh
+
+      - name: Upload Windows Installer
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows-installer
+          path: build/bin/*-setup.exe
+
+  build-macos:
+    runs-on: macos-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.21'
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install Wails
+        run: go install github.com/wailsapp/wails/v2/cmd/wails@latest
+
+      - name: Build macOS App (Intel)
+        run: wails build -platform darwin/amd64
+
+      - name: Build macOS App (Apple Silicon)
+        run: wails build -platform darwin/arm64 -o logzero-arm64
+
+      - name: Create DMG (Intel)
+        run: |
+          VERSION="${{ github.ref_name }}"
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            VERSION="${{ inputs.version }}"
+          fi
+          VERSION="${VERSION#v}"
+
+          # Create DMG for Intel
+          mkdir -p dmg-intel
+          cp -r "build/bin/logzero.app" dmg-intel/ 2>/dev/null || cp -r "build/bin/LogZero.app" dmg-intel/
+          ln -s /Applications dmg-intel/Applications
+          hdiutil create -volname "LogZero" -srcfolder dmg-intel -ov -format UDZO "build/bin/LogZero-${VERSION}-macos-x64.dmg"
+
+      - name: Create DMG (Apple Silicon)
+        run: |
+          VERSION="${{ github.ref_name }}"
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            VERSION="${{ inputs.version }}"
+          fi
+          VERSION="${VERSION#v}"
+
+          # Create DMG for Apple Silicon
+          mkdir -p dmg-arm
+          cp -r "build/bin/logzero-arm64.app" dmg-arm/LogZero.app 2>/dev/null || true
+          ln -s /Applications dmg-arm/Applications
+          hdiutil create -volname "LogZero" -srcfolder dmg-arm -ov -format UDZO "build/bin/LogZero-${VERSION}-macos-arm64.dmg" 2>/dev/null || true
+
+      - name: Upload macOS DMGs
+        uses: actions/upload-artifact@v4
+        with:
+          name: macos-dmg
+          path: build/bin/*.dmg
+
+  build-linux:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.21'
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install Linux Dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libgtk-3-dev libwebkit2gtk-4.0-dev nsis
+
+      - name: Install Wails
+        run: go install github.com/wailsapp/wails/v2/cmd/wails@latest
+
+      - name: Build Linux Binary
+        run: wails build -platform linux/amd64
+
+      - name: Package Linux
+        run: |
+          VERSION="${{ github.ref_name }}"
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            VERSION="${{ inputs.version }}"
+          fi
+          VERSION="${VERSION#v}"
+
+          # Create tarball
+          mkdir -p LogZero-${VERSION}
+          cp build/bin/logzero LogZero-${VERSION}/ 2>/dev/null || cp build/bin/LogZero LogZero-${VERSION}/logzero
+          chmod +x LogZero-${VERSION}/logzero
+          cp README.md LogZero-${VERSION}/
+          cp build/linux/logzero.desktop LogZero-${VERSION}/ 2>/dev/null || true
+          tar -czvf "build/bin/LogZero-${VERSION}-linux-x64.tar.gz" LogZero-${VERSION}
+
+      - name: Upload Linux Package
+        uses: actions/upload-artifact@v4
+        with:
+          name: linux-package
+          path: build/bin/*.tar.gz
+
+  create-release:
+    needs: [build-windows, build-macos, build-linux]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+
+      - name: Get version
+        id: version
+        run: |
+          VERSION="${{ github.ref_name }}"
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            VERSION="${{ inputs.version }}"
+          fi
+          echo "version=${VERSION}" >> $GITHUB_OUTPUT
+          echo "version_num=${VERSION#v}" >> $GITHUB_OUTPUT
+
+      - name: Generate checksums
+        run: |
+          cd artifacts
+          find . -type f \( -name "*.exe" -o -name "*.dmg" -o -name "*.tar.gz" \) -exec sha256sum {} \; > checksums.txt
+          cat checksums.txt
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ steps.version.outputs.version }}
+          name: LogZero ${{ steps.version.outputs.version }}
+          draft: false
+          prerelease: false
+          generate_release_notes: true
+          files: |
+            artifacts/windows-installer/*
+            artifacts/macos-dmg/*
+            artifacts/linux-package/*
+            artifacts/checksums.txt
+          body: |
+            ## LogZero ${{ steps.version.outputs.version }}
+
+            A high-performance timeline generator for Digital Forensics and Incident Response.
+
+            ### Downloads
+
+            | Platform | Download |
+            |----------|----------|
+            | **Windows** | `LogZero-${{ steps.version.outputs.version_num }}-windows-x64-setup.exe` |
+            | **macOS (Intel)** | `LogZero-${{ steps.version.outputs.version_num }}-macos-x64.dmg` |
+            | **macOS (Apple Silicon)** | `LogZero-${{ steps.version.outputs.version_num }}-macos-arm64.dmg` |
+            | **Linux** | `LogZero-${{ steps.version.outputs.version_num }}-linux-x64.tar.gz` |
+
+            ### Installation
+
+            **Windows:** Download and run the installer. Follow the prompts.
+
+            **macOS:** Download the DMG, open it, and drag LogZero to Applications.
+
+            **Linux:** Extract the tarball and run `./logzero`
+
+            ### Verify Download Integrity
+
+            Download `checksums.txt` and verify your download:
+
+            **Windows (PowerShell):**
+            ```powershell
+            Get-FileHash LogZero-${{ steps.version.outputs.version_num }}-windows-x64-setup.exe -Algorithm SHA256
+            ```
+
+            **macOS/Linux:**
+            ```bash
+            sha256sum LogZero-${{ steps.version.outputs.version_num }}-*
+            ```
+
+            ### What's New
+
+            See the automatically generated changelog below.
